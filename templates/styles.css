@@ -1,0 +1,8 @@
+.container {
+  max-width: 500px;
+  margin-top: 50px;
+}
+
+#expensesList {
+  margin-top: 20px;
+}

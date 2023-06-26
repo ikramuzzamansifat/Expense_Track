@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+</head>
+<body>
+
+    <h1>Find Total History of a day</h1>
+    <div class="mb-3">
+        <label for="dateInput" class="form-label">Enter Date</label>
+        <input id="dateInput" type="date" class="form-control" id="dateInput" required>
+    </div>
+    <button id="formSubmitBtn" type="submit" class="btn btn-primary" onclick="getFormInput(event)">Submit</button>
+
+
+    <table id="expenseTable">
+        <thead>
+          <tr>
+            <th>Date &emsp; &emsp; &emsp; &emsp;</th>  
+            <th>Amount &emsp; &emsp;</th> 
+            <th>Category &emsp; &emsp;</th> 
+            <th>Notes &emsp;</th> 
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Expense history rows will be dynamically added here -->
+        </tbody>
+      </table>
+
+
+      <script>
+
+        function getFormInput(){
+           let dateInput = document.getElementById('dateInput').value;
+            console.log(dateInput);
+            let url = 'http://127.0.0.1:8000/api/expense-history/' + dateInput ;
+            console.log(url);
+            fetch( url)
+    .then(response => {
+        if (!response.ok) {
+        throw new Error('Request failed with status ' + response.status);
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Get the expense table element
+        
+        const expenseTable = document.getElementById('expenseTable');
+        while (expenseTable.rows.length > 1) {
+         expenseTable.deleteRow(1);
+        }
+        // expenseTable.innerHTML = expenseTable
+        console.log(expenseTable)
+        // Iterate through the expense history data and create table rows
+        data.forEach(expense => {
+        const row = expenseTable.insertRow();
+
+        // Create table cells for each expense field
+        const dateCell = row.insertCell();
+        const amountCell = row.insertCell();
+        const categoryCell = row.insertCell();
+        const notesCell = row.insertCell();
+
+        // Populate the table cells with expense data
+        dateCell.textContent = expense.date;
+        amountCell.textContent = expense.amount;
+        categoryCell.textContent = expense.category;
+        notesCell.textContent = expense.notes;
+        });
+    })
+    .catch(error => {
+        // Handle any errors
+        console.error(error);
+    });
+        }
+        </script>
+
+
+        <h1>Find Total Expense of a day</h1>
+    <div class="mb-4">
+        <label for="dateInput2" class="form-label">Enter Date</label>
+        <input id="dateInput2" type="date" class="form-control" required>
+    </div>
+    <button id="formSubmitBtn" type="submit" class="btn btn-primary" onclick="getFormInput2(event)">Submit</button>
+
+    <h1 id="total-expense"></h1>
+
+    <script>
+
+        function getFormInput2(){
+           let dateInput = document.getElementById('dateInput2').value;
+            console.log("This is dateinpue: " + dateInput);
+            let url = 'http://127.0.0.1:8000/api/total-expense/' + dateInput ;
+            console.log(url);
+            fetch( url)
+    .then(response => {
+        if (!response.ok) {
+        throw new Error('Request failed with status ' + response.status);
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Get the expense table element
+        
+        // const expenseTable = document.getElementById('total-expense');
+        // expenseTable.innerHTML = expenseTable
+        const totalExpenseString = `Total expense: ${data.total_expense}`;
+        document.getElementById("total-expense").innerHTML = totalExpenseString;
+        // Iterate through the expense history data and create table rows
+    })
+    .catch(error => {
+        // Handle any errors
+        console.error(error);
+    });
+        }
+      </script>
+
+
+</body>
+</html>
