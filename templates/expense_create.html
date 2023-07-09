@@ -67,10 +67,20 @@
 
         const baseUrl = "http://127.0.0.1:8000/";
         const url = baseUrl + "api/create-expense/";
+        fetch('http://127.0.0.1:8000/api/get-csrf-token/', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+        })
+    .then(response => response.json())
+    .then(data => {
+        const csrfToken = data.csrfToken;
         fetch(url, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
             },
             body: JSON.stringify(jsonObj),
         })
@@ -83,6 +93,7 @@
                 // Handle any errors
                 console.error(error);
             });
+        });
 
     }
 </script>
