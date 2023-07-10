@@ -21,14 +21,15 @@ from api.views import (
     HistoryView,
     HistoryDateView,
     CreateExpense,
+    HistoryReportView,
 )
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("api.urls")),
-
     path("", IndexView.as_view(), name="index"),
-    path("history/", HistoryView.as_view(), name="index"),
-    path("history_date/", HistoryDateView.as_view(), name="index"),
-    path("expense_create/", CreateExpense.as_view(), name="index"),
-
+    path("history/", HistoryView.as_view(), name="history"),
+    path("history_date/", HistoryDateView.as_view(), name="history-date"),
+    path("expense_create/", CreateExpense.as_view(), name="expense-create"),
+    path("history_report/", HistoryReportView.as_view(), name="history-report"),
 ]

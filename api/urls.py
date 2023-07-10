@@ -10,6 +10,8 @@ from .views import (
     get_csrf_token,
 )
 
+from . import views
+
 urlpatterns = [
     # Frontend
     # Backend
@@ -30,5 +32,10 @@ urlpatterns = [
         TotalExpenseWithDateView.as_view(),
         name="total-expense-with-date",
     ),
+    #
     path("get-csrf-token/", get_csrf_token, name="get-csrf-token"),
+    path("", views.test, name="test"),
+    path("sendmail/", views.send_mail_to_all, name="sendmail"),
+    path("send-report/", views.send_report, name="send-report-func"),
+    path("send-report-range/", views.send_report_range, name="send-report-func"),
 ]

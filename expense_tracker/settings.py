@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     "api.apps.ApiConfig",
+    #
+    'django_celery_results',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -130,3 +133,28 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CORS_ORIGIN_WHITELIST = [
     "http://127.0.0.1:5500",
 ]
+
+
+# Celery settings
+CELERY_BROKER_URL = "redis://127.0.0.1:6379"
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TASK_SERIALIZER = "json"
+CELERY_TIMEZONE = "Asia/Dhaka"
+
+CELERY_RESULT_BACKEND = "django-db"
+
+
+
+# CELERY beat settings
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+
+
+# SMTP mail settings
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_USE_TLS = True
+EMAIL_HOST = "smtp.gmail.com"  # gmail er smtp
+EMAIL_PORT = 587  # for local system , 465 for live
+EMAIL_HOST_USER = "ikramuzzamansifat@gmail.com"  # 'securesally@gmail.com
+EMAIL_HOST_PASSWORD = "qquvcfeiiprhsefk"
+DEFAULT_FROM_EMAIL = "Celery  <ikramuzzamansifat@gmail.com>"
