@@ -11,9 +11,10 @@
     <h1>Find Total History of a day</h1>
     <div class="mb-3">
         <label for="dateInput" class="form-label">Enter Date</label>
-        <input id="dateInput" type="date" class="form-control" id="dateInput" required>
+        <input id="dateInput" type="date" class="form-control" required>
     </div>
     <button id="formSubmitBtn" type="submit" class="btn btn-primary" onclick="getFormInput(event)">Submit</button>
+    <button id="sendEmailBtn" type="submit" class="btn btn-primary" onclick="sendDataMail(event)">Send Data to email</button>
 
 
     <table id="expenseTable">
@@ -32,7 +33,43 @@
 
 
       <script>
-
+        let jsonReport;
+        function sendDataMail(){
+           let dateInput = document.getElementById('dateInput').value;
+            console.log(dateInput);
+            let url = 'http://127.0.0.1:8000/api/send-report/'; // + dateInput ;
+            console.log(url);
+            fetch('http://127.0.0.1:8000/api/get-csrf-token/', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const csrfToken = data.csrfToken;
+                    console.log(csrfToken)
+                    console.log(jsonReport)
+                    fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken,
+                        },
+                        body: JSON.stringify(jsonReport),
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            // Handle the response data
+                            console.log(data);
+                        })
+                        .catch(error => {
+                            // Handle any errors
+                            console.error(error);
+                        });
+                    });        
+            }
+           
         function getFormInput(){
            let dateInput = document.getElementById('dateInput').value;
             console.log(dateInput);
@@ -47,7 +84,8 @@
     })
     .then(data => {
         // Get the expense table element
-        
+        jsonReport = data 
+        console.log(jsonReport)
         const expenseTable = document.getElementById('expenseTable');
         while (expenseTable.rows.length > 1) {
          expenseTable.deleteRow(1);
