@@ -56,6 +56,22 @@ def send_report_range(request):
     return JsonResponse("String " + json_response, safe=False)
 
 
+def schedule_report_range(request):
+    start_date = date(2023, 7, 1)
+    end_date = date(2023, 7, 31)
+    expenses_within_range = Expense.objects.filter(
+        date__range=(start_date, end_date)
+    ).values()
+    expenses_list = list(expenses_within_range)
+
+    json_response = json.dumps(expenses_list, cls=CompositeEncoder)
+
+    # Call the Celery task asynchronously
+    send_report_func.delay(json_response)
+
+    return JsonResponse("String " + json_response, safe=False)
+
+
 def send_report(request):
     json_report = json.loads(request.body)
     print(json_report)

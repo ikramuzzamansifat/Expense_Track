@@ -39,3 +39,4 @@ def send_report_func(self, json_report):
             fail_silently=True,
         )
     return "Sent Mail Done"
+
