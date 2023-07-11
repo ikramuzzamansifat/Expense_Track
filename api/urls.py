@@ -38,4 +38,13 @@ urlpatterns = [
     path("sendmail/", views.send_mail_to_all, name="sendmail"),
     path("send-report/", views.send_report, name="send-report-func"),
     path("send-report-range/", views.send_report_range, name="send-report-func"),
+    path("schedule-mail/", views.schedule_mail, name="schedule-mail"),
+    path(
+        "schedule-report-mail/", views.schedule_report_mail, name="schedule-report-mail"
+    ),
+    path(
+        "schedule-report-range/",
+        views.schedule_report_range,
+        name="schedule-report-range",
+    ),
 ]

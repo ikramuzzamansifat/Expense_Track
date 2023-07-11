@@ -41,8 +41,9 @@ INSTALLED_APPS = [
     "corsheaders",
     "api.apps.ApiConfig",
     #
-    'django_celery_results',
-    'django_celery_beat',
+    "django_celery_results",
+    "django_celery_beat",
+    "send_mail_app",
 ]
 
 MIDDLEWARE = [
@@ -112,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Asia/Dhaka"
 
 USE_I18N = True
 
@@ -143,7 +144,6 @@ CELERY_TASK_SERIALIZER = "json"
 CELERY_TIMEZONE = "Asia/Dhaka"
 
 CELERY_RESULT_BACKEND = "django-db"
-
 
 
 # CELERY beat settings

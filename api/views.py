@@ -1,3 +1,4 @@
+from calendar import monthrange
 import datetime
 from decimal import Decimal
 from django.db.models import Sum
@@ -17,6 +18,8 @@ from .tasks import test_func
 from send_mail_app.tasks import send_mail_func, send_report_func
 import json
 from datetime import date, datetime
+from django_celery_beat.models import PeriodicTask, CrontabSchedule
+from django.shortcuts import redirect
 
 
 def test(request):
@@ -28,6 +31,17 @@ def send_mail_to_all(request):
     send_mail_func.delay()
 
     return HttpResponse("Sent Mail")
+
+
+def schedule_mail(request):
+    schedule, created = CrontabSchedule.objects.get_or_create(hour=10, minute=42)
+    task = PeriodicTask.objects.create(
+        crontab=schedule,
+        name="schedule_mail_task" + "4",
+        task="send_mail_app.tasks.send_mail_func",
+        # task="send_mail_app.tasks.send_report_func",
+    )  # , args = json.dumps())
+    return HttpResponse("Sent scheduled mail")
 
 
 class CompositeEncoder(json.JSONEncoder):
@@ -56,9 +70,42 @@ def send_report_range(request):
     return JsonResponse("String " + json_response, safe=False)
 
 
+def schedule_report_mail(request):
+    # Create or get the CrontabSchedule for the desired time (e.g., 10:42 AM)
+
+    schedule, created = CrontabSchedule.objects.get_or_create(hour=11, minute=34)
+    # Create a PeriodicTask for the schedule
+    task = PeriodicTask.objects.create(
+        crontab=schedule,
+        name="schedule_mail_task" + str(datetime.now()),
+        task="send_mail_app.tasks.send_mail_func",
+    )
+
+    return redirect(
+        "/schedule-report-range/"
+    )  # Redirect to the schedule_report_range view
+
+
 def schedule_report_range(request):
-    start_date = date(2023, 7, 1)
-    end_date = date(2023, 7, 31)
+    current_date = datetime.now().date()
+
+    # Calculate the previous month's start and end dates
+    if current_date.month == 1:
+        previous_month_year = current_date.year - 1
+        previous_month = 12
+    else:
+        previous_month_year = current_date.year
+        previous_month = current_date.month - 1
+
+    start_date = date(previous_month_year, previous_month, 1)
+
+    _, last_day = monthrange(previous_month_year, previous_month)
+    end_date = date(previous_month_year, previous_month, last_day)
+
+    # Print the start_date and end_date
+    print(start_date)  # Output: 2023-06-01
+    print(end_date)  # Output: 2023-06-30
+
     expenses_within_range = Expense.objects.filter(
         date__range=(start_date, end_date)
     ).values()
@@ -69,7 +116,8 @@ def schedule_report_range(request):
     # Call the Celery task asynchronously
     send_report_func.delay(json_response)
 
-    return JsonResponse("String " + json_response, safe=False)
+    return HttpResponse("Sent Report rangess...")
+    # return HttpResponse(json_response)
 
 
 def send_report(request):
