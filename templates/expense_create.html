@@ -1,101 +1,118 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Expense Tracker</title>
     <!-- Link Bootstrap CSS -->
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-</head>
-<body>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Expense Tracker</h1>
 
-    
-<div class="container">
-
-    <h1>Expense Tracker</h1>
-
-    <form id="expenseForm">
+      <form id="expenseForm">
         <div class="mb-3">
-            <label for="dateInput" class="form-label">Date</label>
-            <input id="dateInput" type="date" class="form-control" id="dateInput" required>
+          <label for="dateInput" class="form-label">Date</label>
+          <input
+            id="dateInput"
+            type="date"
+            class="form-control"
+            id="dateInput"
+            required
+          />
         </div>
         <div class="mb-3">
-            <label for="amountInput" class="form-label">Amount</label>
-            <input id="amountInput" type="number" class="form-control" required>
+          <label for="categoryInput" class="form-label">Category</label>
+          <select id="categoryInput" class="form-control" required>
+            <option value="">Select category</option>
+            <option value="food">Food</option>
+            <option value="transportation">Transportation</option>
+            <option value="housing">Housing</option>
+            <!-- Add more options as needed -->
+          </select>
         </div>
         <div class="mb-3">
-            <label for="categoryInput" class="form-label">Category</label>
-            <select id="categoryInput" class="form-control" required>
-                <option value="">Select category</option>
-                <option value="food">Food</option>
-                <option value="transportation">Transportation</option>
-                <option value="housing">Housing</option>
-                <!-- Add more options as needed -->
-            </select>
+          <label for="amountInput" class="form-label">Amount</label>
+          <input id="amountInput" type="number" class="form-control" required />
         </div>
         <div class="mb-3">
-            <label for="notesInput" class="form-label">Notes</label>
-            <textarea id="notesInput" class="form-control"></textarea>
+          <label for="notesInput" class="form-label">Notes</label>
+          <textarea id="notesInput" class="form-control"></textarea>
         </div>
 
-        <button id="formSubmitBtn" type="submit" class="btn btn-primary" onclick="getFormInput(event)">Submit</button>
-    </form>
+        <button
+          id="formSubmitBtn"
+          type="submit"
+          class="btn btn-primary"
+          onclick="getFormInput(event)"
+        >
+          Submit
+        </button>
+      </form>
 
-    <div id="expensesList" class="mt-4"></div>
-</div>
+      <p id="creation-response"></p>
+      <div id="expensesList" class="mt-4"></div>
+    </div>
+    <!-- write code to return to homepage for django -->
+    <p><a href="{% url 'index' %}">Go to Home Page</a></p>
+    <!-- Link Bootstrap JavaScript and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- Link Bootstrap JavaScript and jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- Link your custom script file -->
-<script>
-    function getFormInput(event) {
+    <!-- Link your custom script file -->
+    <script>
+      function getFormInput(event) {
         console.log("Entering Form..");
         event.preventDefault();
-        const dateInput = document.getElementById('dateInput').value;
-        const amountInput = document.getElementById('amountInput').value;
-        const categoryInput = document.getElementById('categoryInput').value;
-        const notesInput = document.getElementById('notesInput').value;
+        const dateInput = document.getElementById("dateInput").value;
+        const amountInput = document.getElementById("amountInput").value;
+        const categoryInput = document.getElementById("categoryInput").value;
+        const notesInput = document.getElementById("notesInput").value;
 
         const jsonObj = {
-            "date": dateInput,
-            "amount": amountInput,
-            "category": categoryInput,
-            "notes": notesInput,
-        }
+          date: dateInput,
+          amount: amountInput,
+          category: categoryInput,
+          notes: notesInput,
+        };
         console.log(jsonObj);
 
         const baseUrl = "http://127.0.0.1:8000/";
         const url = baseUrl + "api/create-expense/";
-        fetch('http://127.0.0.1:8000/api/get-csrf-token/', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json'
-        }
+        fetch("http://127.0.0.1:8000/api/get-csrf-token/", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
         })
-    .then(response => response.json())
-    .then(data => {
-        const csrfToken = data.csrfToken;
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken,
-            },
-            body: JSON.stringify(jsonObj),
-        })
-            .then(response => response.json())
-            .then(data => {
+          .then((response) => response.json())
+          .then((data) => {
+            const csrfToken = data.csrfToken;
+            fetch(url, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": csrfToken,
+              },
+              body: JSON.stringify(jsonObj),
+            })
+              .then((response) => response.json())
+              .then((data) => {
                 // Handle the response data
                 console.log(data);
-            })
-            .catch(error => {
+                document.getElementById("creation-response").innerHTML =
+                  "Expense created successfully!";
+                document.getElementById("expenseForm").reset();
+              })
+              .catch((error) => {
                 // Handle any errors
                 console.error(error);
-            });
-        });
-
-    }
-</script>
-</body>
+              });
+          });
+      }
+    </script>
+  </body>
 </html>
