@@ -1,11 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+{% extends 'base.html'%}
+
+{% block title %}Send Report{% endblock %}
+
+{% block content %}
+    <br> <br> 
     <h1>Find Total History of a day and sent it via email</h1>
     <div class="mb-5">
         <label for="dateInput" class="form-label">Enter Start Date</label>
@@ -20,7 +18,7 @@
     <div>
         <p id="email-status"></p>
     </div>
-      <script>
+    <script>
             function sendDataMail(){
                 document.getElementById('email-status').innerHTML = ''
 
@@ -58,6 +56,8 @@
                 });
             }
 
-      </script>
-</body>
-</html>
+    </script>
+
+{% endblock %}
+
+

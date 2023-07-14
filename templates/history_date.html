@@ -1,11 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body>
+{% extends 'base.html' %}
+
+{% block title %}Home Page{% endblock %}
+
+{% block content %}
+<!-- Your specific content for expense_create.html -->
+
+    <style> 
+      #expenseTable {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      
+      #expenseTable th,
+    #expenseTable td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    #expenseTable th {
+      background-color: #f5f5f5;
+      font-weight: bold;
+    }
+    </style> 
+    
     <h1>Find Total History of a day</h1>
     <div class="mb-3">
       <label for="dateInput" class="form-label">Enter Date</label>
@@ -179,5 +197,5 @@
           });
       }
     </script>
-  </body>
-</html>
+{% endblock %}
+
