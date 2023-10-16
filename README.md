@@ -2,13 +2,16 @@
 1. First clone the project using command 
 - git clone https://github.com/ikramuzzamansifat/Expense_Track.git
 2. Open the projects with your desired code editor.
-3. Install the requirements with command
+3. Create and Activate any Virtual environment if required.
+- python -m venv env
+- source env/bin/activate 
+4. Install the requirements with command
   - pip install -r requirements.txt
-4. Run python Server with command
+5. Run python Server with command
   - python manage.py runserver | python3 manage.py runserver
-5. Install Celery in your environment
+6. Install Celery in your environment
   - sudo apt install celery
-6. Run Project 
+7. Run Project 
   - python manage.py runserver
 
 ## Stack
